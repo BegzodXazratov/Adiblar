@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dunyo Adabiyoti — 10 Buyuk Yozuvchi</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#d4a017;--gold-light:#e8c547;--gold-pale:#e8d5a3;
+  --dark:#0d0a07;--dark2:#1a1108;--dark3:#251a0c;
+  --border:#5a3f10;--text:#c9a06b;--white:#f5edd8;
+}
+body{background:var(--dark);color:var(--text);font-family:Georgia,'Times New Roman',serif;min-height:100vh;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  background:rgba(13,10,7,0.97);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;height:64px;
+  backdrop-filter:blur(8px);
+}
+.logo{font-size:1.3rem;color:var(--gold);cursor:pointer;letter-spacing:.08em;}
+.logo span{color:var(--white);font-style:italic;}
+.nav-links{display:flex;gap:.5rem;}
+.nav-btn{
+  background:none;border:1px solid transparent;color:var(--text);
+  font-family:Georgia,serif;font-size:.85rem;cursor:pointer;
+  padding:.4rem .9rem;border-radius:3px;transition:all .25s;letter-spacing:.03em;
+}
+.nav-btn:hover,.nav-btn.active{color:var(--gold);border-color:var(--border);}
+.breadcrumb{font-size:.8rem;color:var(--gold);opacity:.7;}
+.breadcrumb span{cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+
+/* PAGES */
+.page{display:none;min-height:calc(100vh - 64px);margin-top:64px;}
+.page.active{display:block;}
+.page-enter{animation:enter .55s cubic-bezier(.22,.61,.36,1) forwards;}
+.page-exit{animation:exit .3s ease-in forwards;position:absolute;top:64px;left:0;right:0;}
+@keyframes enter{
+  from{opacity:0;transform:perspective(900px) rotateY(12deg) translateX(40px);}
+  to{opacity:1;transform:perspective(900px) rotateY(0) translateX(0);}
+}
+@keyframes exit{
+  from{opacity:1;transform:perspective(900px) rotateY(0);}
+  to{opacity:0;transform:perspective(900px) rotateY(-12deg) translateX(-40px);}
+}
+
+/* HOME */
+.hero{
+  text-align:center;padding:5rem 2rem 4rem;
+  background:radial-gradient(ellipse at 50% 0%, #2a1c06 0%, var(--dark) 70%);
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(90,63,16,.08) 40px,rgba(90,63,16,.08) 41px),
+             repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(90,63,16,.08) 40px,rgba(90,63,16,.08) 41px);
+}
+.hero-content{position:relative;z-index:1;}
+.hero h1{font-size:3rem;color:var(--gold);letter-spacing:.1em;line-height:1.2;margin-bottom:.5rem;}
+.hero h1 span{display:block;font-size:1.2rem;color:var(--white);font-weight:normal;font-style:italic;letter-spacing:.2em;margin-bottom:.5rem;}
+.hero p{max-width:580px;margin:.8rem auto 0;color:var(--text);font-size:1rem;line-height:1.7;font-style:italic;}
+.ornament{color:var(--gold);font-size:1.5rem;display:block;margin:.8rem 0;opacity:.6;}
+
+.grid-section{padding:3rem 2rem 4rem;max-width:1200px;margin:0 auto;}
+.section-title{text-align:center;font-size:1.6rem;color:var(--gold);letter-spacing:.12em;margin-bottom:.4rem;}
+.section-sub{text-align:center;color:var(--text);font-size:.9rem;font-style:italic;margin-bottom:2.5rem;opacity:.8;}
+.authors-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:1.5rem;
+}
+
+/* AUTHOR CARD */
+.author-card{
+  background:var(--dark2);border:1px solid var(--border);
+  border-radius:4px;cursor:pointer;overflow:hidden;
+  transition:transform .3s,border-color .3s,box-shadow .3s;
+  position:relative;
+}
+.author-card:hover{
+  transform:translateY(-6px);
+  border-color:var(--gold);
+  box-shadow:0 12px 40px rgba(212,160,23,.15);
+}
+.author-card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg,transparent 50%,rgba(13,10,7,.85) 100%);
+  pointer-events:none;
+}
+.card-img{width:100%;height:230px;object-fit:cover;object-position:top;display:block;filter:sepia(.3) contrast(1.05);}
+.card-img-placeholder{
+  width:100%;height:230px;background:var(--dark3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:4rem;color:var(--border);
+}
+.card-body{padding:1rem;background:var(--dark2);}
+.card-num{font-size:.75rem;color:var(--gold);letter-spacing:.1em;margin-bottom:.2rem;}
+.card-name{font-size:1.05rem;color:var(--white);margin-bottom:.2rem;line-height:1.3;}
+.card-era{font-size:.8rem;color:var(--text);font-style:italic;margin-bottom:.5rem;}
+.card-genre{display:inline-block;font-size:.7rem;background:rgba(90,63,16,.35);color:var(--gold);border:1px solid var(--border);padding:.15rem .5rem;border-radius:2px;letter-spacing:.05em;}
+.card-works-count{font-size:.75rem;color:var(--text);margin-top:.5rem;opacity:.7;}
+
+/* AUTHOR DETAIL */
+.author-detail{max-width:1100px;margin:0 auto;padding:2.5rem 2rem 4rem;}
+.back-btn{
+  background:none;border:1px solid var(--border);color:var(--text);
+  font-family:Georgia,serif;font-size:.85rem;cursor:pointer;
+  padding:.4rem 1rem;border-radius:3px;margin-bottom:2rem;
+  transition:all .25s;letter-spacing:.03em;
+}
+.back-btn:hover{color:var(--gold);border-color:var(--gold);}
+.author-header{display:flex;gap:2.5rem;margin-bottom:3rem;align-items:flex-start;}
+.author-photo-wrap{flex-shrink:0;width:220px;}
+.author-photo{
+  width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top;
+  border:2px solid var(--border);border-radius:3px;
+  filter:sepia(.2) contrast(1.05);
+}
+.author-photo-placeholder{
+  width:100%;aspect-ratio:3/4;background:var(--dark3);
+  border:2px solid var(--border);border-radius:3px;
+  display:flex;align-items:center;justify-content:center;font-size:5rem;color:var(--border);
+}
+.author-info{flex:1;}
+.author-number{font-size:.85rem;color:var(--gold);letter-spacing:.15em;margin-bottom:.3rem;}
+.author-name-big{font-size:2.5rem;color:var(--white);line-height:1.15;margin-bottom:.3rem;}
+.author-name-native{font-size:1rem;color:var(--text);font-style:italic;margin-bottom:1rem;opacity:.8;}
+.author-meta{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1.5rem;}
+.meta-item{background:var(--dark3);border:1px solid var(--border);padding:.4rem .8rem;border-radius:3px;}
+.meta-label{font-size:.7rem;color:var(--gold);letter-spacing:.08em;display:block;margin-bottom:.1rem;}
+.meta-value{font-size:.9rem;color:var(--white);}
+.author-bio{font-size:.95rem;line-height:1.8;color:var(--text);}
+.author-bio p{margin-bottom:1rem;}
+
+.divider{border:none;border-top:1px solid var(--border);margin:2rem 0;position:relative;}
+.divider::before{content:'✦';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--dark);padding:0 .8rem;color:var(--border);font-size:.9rem;}
+
+/* WORKS */
+.works-heading{font-size:1.3rem;color:var(--gold);letter-spacing:.1em;margin-bottom:1.5rem;}
+.works-list{list-style:none;display:grid;gap:.8rem;}
+.work-item{
+  background:var(--dark2);border:1px solid var(--border);
+  border-radius:3px;padding:1rem 1.2rem;cursor:pointer;
+  transition:all .25s;display:flex;align-items:flex-start;gap:1rem;
+}
+.work-item:hover{border-color:var(--gold);background:var(--dark3);}
+.work-num{font-size:1.3rem;color:var(--border);font-style:italic;min-width:2rem;}
+.work-main{}
+.work-title{font-size:1rem;color:var(--white);margin-bottom:.2rem;}
+.work-year{font-size:.8rem;color:var(--gold);margin-bottom:.3rem;}
+.work-desc{font-size:.85rem;color:var(--text);line-height:1.6;font-style:italic;}
+.work-badge{display:inline-block;font-size:.7rem;background:rgba(90,63,16,.4);color:var(--gold);border:1px solid var(--border);padding:.1rem .4rem;border-radius:2px;margin-top:.3rem;}
+
+/* WORKS PAGE */
+.works-page-wrap{max-width:900px;margin:0 auto;padding:2.5rem 2rem 4rem;}
+.works-page-header{margin-bottom:2rem;}
+.works-page-title{font-size:2rem;color:var(--white);margin-bottom:.3rem;}
+.works-page-sub{font-size:.9rem;color:var(--text);font-style:italic;}
+.full-work-card{
+  background:var(--dark2);border:1px solid var(--border);
+  border-radius:4px;padding:1.5rem;margin-bottom:1.2rem;
+}
+.full-work-title{font-size:1.3rem;color:var(--gold);margin-bottom:.3rem;}
+.full-work-meta{font-size:.8rem;color:var(--text);margin-bottom:.8rem;font-style:italic;}
+.full-work-body{font-size:.9rem;color:var(--text);line-height:1.8;}
+
+/* ALL AUTHORS LIST PAGE */
+.list-page{max-width:900px;margin:0 auto;padding:2.5rem 2rem 4rem;}
+.list-page h2{font-size:1.8rem;color:var(--gold);letter-spacing:.1em;margin-bottom:2rem;}
+.author-list-item{
+  display:flex;align-items:center;gap:1.5rem;
+  background:var(--dark2);border:1px solid var(--border);
+  border-radius:3px;padding:1rem 1.2rem;margin-bottom:.8rem;
+  cursor:pointer;transition:all .25s;
+}
+.author-list-item:hover{border-color:var(--gold);background:var(--dark3);}
+.list-num{font-size:1.8rem;color:var(--border);font-style:italic;min-width:2.5rem;}
+.list-thumb{width:55px;height:70px;object-fit:cover;object-position:top;border:1px solid var(--border);border-radius:2px;filter:sepia(.2);}
+.list-thumb-ph{width:55px;height:70px;background:var(--dark3);border:1px solid var(--border);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--border);}
+.list-info{}
+.list-name{font-size:1.1rem;color:var(--white);margin-bottom:.2rem;}
+.list-era{font-size:.8rem;color:var(--text);font-style:italic;margin-bottom:.3rem;}
+.list-genre{font-size:.75rem;color:var(--gold);opacity:.8;}
+
+/* ABOUT */
+.about-page{max-width:700px;margin:0 auto;padding:3rem 2rem 4rem;text-align:center;}
+.about-page h2{font-size:2rem;color:var(--gold);margin-bottom:1.5rem;letter-spacing:.1em;}
+.about-page p{line-height:1.9;margin-bottom:1.2rem;font-size:.95rem;}
+
+/* FOOTER */
+footer{
+  background:var(--dark2);border-top:1px solid var(--border);
+  text-align:center;padding:1.5rem;font-size:.8rem;color:var(--text);opacity:.6;
+}
+
+/* TABS on author detail */
+.tabs{display:flex;gap:.5rem;margin-bottom:1.5rem;}
+.tab{
+  background:none;border:1px solid var(--border);color:var(--text);
+  font-family:Georgia,serif;font-size:.85rem;cursor:pointer;
+  padding:.45rem 1.1rem;border-radius:3px;transition:all .25s;
+}
+.tab.active,.tab:hover{background:var(--dark3);color:var(--gold);border-color:var(--gold);}
+.tab-content{display:none;}
+.tab-content.active{display:block;animation:fadeIn .4s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+.quote-block{
+  border-left:3px solid var(--gold);padding:.8rem 1.2rem;margin:1rem 0;
+  background:rgba(90,63,16,.1);font-style:italic;line-height:1.8;
+  color:var(--white);font-size:.95rem;
+}
+
+/* Mobile */
+@media(max-width:680px){
+  .hero h1{font-size:2rem;}
+  .authors-grid{grid-template-columns:repeat(2,1fr);}
+  .author-header{flex-direction:column;}
+  .author-photo-wrap{width:100%;max-width:220px;}
+  nav{padding:0 1rem;}
+  .nav-links .nav-btn{font-size:.75rem;padding:.3rem .5rem;}
+}
+</style>
+
+<!-- NAV -->
+<nav>
+  <div class="logo" onclick="showPage('home')">📚 <span>Dunyo Adabiyoti</span></div>
+  <div class="nav-links">
+    <button class="nav-btn active" id="nav-home" onclick="showPage('home')">Bosh sahifa</button>
+    <button class="nav-btn" id="nav-list" onclick="showPage('list')">Yozuvchilar</button>
+    <button class="nav-btn" id="nav-about" onclick="showPage('about')">Haqida</button>
+  </div>
+</nav>
+
+<!-- HOME PAGE -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-content">
+      <h1><span>✦ DUNYO ADABIYOTI ✦</span>10 Buyuk Yozuvchi</h1>
+      <div class="ornament">― ✦ ―</div>
+      <p>Insoniyat adabiyotining cho'qqilarini kashf eting. Bu ensiklopediya dunyoning eng ta'sirli o'n yozuvchisining hayoti, asarlari va merosiga bag'ishlangan.</p>
+    </div>
+  </div>
+  <div class="grid-section">
+    <h2 class="section-title">BUYUK QALAMKASHLAR</h2>
+    <p class="section-sub">Yozuvchiga bosing — uning to'liq hayoti va asarlari bilan tanishing</p>
+    <div class="authors-grid" id="home-grid"></div>
+  </div>
+  <footer>© 2024 Dunyo Adabiyoti Ensiklopediyasi · Barcha huquqlar himoyalangan</footer>
+</div>
+
+<!-- LIST PAGE -->
+<div class="page" id="page-list">
+  <div class="list-page">
+    <h2>Barcha Yozuvchilar</h2>
+    <div id="list-container"></div>
+  </div>
+  <footer>© 2024 Dunyo Adabiyoti Ensiklopediyasi</footer>
+</div>
+
+<!-- AUTHOR DETAIL PAGE -->
+<div class="page" id="page-author">
+  <div class="author-detail">
+    <button class="back-btn" onclick="goBack()">← Orqaga</button>
+    <div id="author-content"></div>
+  </div>
+  <footer>© 2024 Dunyo Adabiyoti Ensiklopediyasi</footer>
+</div>
+
+<!-- ABOUT PAGE -->
+<div class="page" id="page-about">
+  <div class="about-page">
+    <h2>Ensiklopediya Haqida</h2>
+    <div class="ornament">✦</div>
+    <p>Ushbu ensiklopediya dunyo adabiyotiga ulkan hissa qo'shgan o'nta buyuk yozuvchi haqida to'liq ma'lumot beradi. Ularning hayoti, ijodi va adabiy merosi batafsil yoritilgan.</p>
+    <p>Har bir yozuvchi bo'limi uning asosiy asarlari ro'yxatini, biografik ma'lumotlarini va adabiy ahamiyatini o'z ichiga oladi.</p>
+    <p>Bu loyiha barcha darajadagi kitobxonlar uchun — maktab o'quvchilaridan tortib adabiyot havaskorlarigacha — foydali manba bo'lishini maqsad qiladi.</p>
+    <div class="ornament">― ✦ ―</div>
+    <p style="font-size:.85rem;opacity:.7;font-style:italic;">"Kitob — dunyo derazasi" — donolik maqoli</p>
+  </div>
+  <footer>© 2024 Dunyo Adabiyoti Ensiklopediyasi</footer>
+</div>
+
+<script>
+const AUTHORS = [
+  {
+    id:1, num:'I', name:'Uilyam Shekspir', native:'William Shakespeare',
+    born:'1564', died:'1616', country:'Angliya', genre:'Drama, She\'r',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Shakespeare.jpg/300px-Shakespeare.jpg',
+    bio:[
+      'Uilyam Shekspir (1564–1616) — ingliz dramaturgi, shoiri va aktyori. U Stratford-upon-Avon shahrida tug\'ilgan va Londonda o\'zining ijodiy faoliyatini yaratgan. Shekspir ko\'pincha ingliz tili va adabiyotining eng buyuk yozuvchisi hamda dunyoning eng mashhur dramaturg sifatida tan olinadi.',
+      'Shekspirgacha va undan keyingi teatr an\'analariga uning ta\'siri beqiyos bo\'ldi. U 37 ta pyesa, 154 ta sonet va bir qancha she\'riy asarlar yozgan. Uning pyesalari insoniy tabiatning chuqur psixologik tahlilini o\'z ichiga oladi.',
+      'Gamlet, Otello, Makbet, Qirol Lir kabi fojiali qahramonlar uning qalamidan chiqqan. Romeo va Julyetta esa dunyo adabiyotidagi eng mashhur muhabbat qissasi bo\'lib qoldi.'
+    ],
+    quote:'Butun dunyo — bu sahna, va barcha erkaklar va ayollar faqat aktyorlardir.',
+    works:[
+      {title:'Hamlet',year:'1601',type:'Drama',desc:'Daniya shahzodasi Hamletning otasini o\'ldirgan amakisiga qarshi qasosi haqida fojiaviy drama. Inson tabiatining eng chuqur psixologik tahlili.'},
+      {title:'Romeo va Julyetta',year:'1597',type:'Drama',desc:'Bir-biriga dushman ikki oila farzandlarining buyuk muhabbati haqida dunyoga mashhur fojiaviy drama.'},
+      {title:'Otello',year:'1603',type:'Drama',desc:'Raqibining hiylasi tufayli rafiqasiga shubha qilgan general Otelloning fojiasi. Rashk mavzusidagi eng kuchli asar.'},
+      {title:'Qirol Lir',year:'1606',type:'Drama',desc:'Qo\'lidan davlatini olgan qizi tomonidan aldangan va quvg\'in qilingan qirol haqidagi fojiaviy drama.'},
+      {title:'Makbet',year:'1606',type:'Drama',desc:'Hokimiyat uchun qotillikka boradigan general Makbetning fojiasi. Ambitsiya va gunoh mavzusidagi buyuk asar.'},
+      {title:'Yoz kechasidagi tush',year:'1600',type:'Komediya',desc:'Sehrli o\'rmonda sodir bo\'ladigan muhabbat va sir-sinoatlar haqida eng mashhur komedik pyesalardan biri.'},
+      {title:'Sonnetlar',year:'1609',type:'She\'r',desc:'154 ta sonetdan iborat to\'plam — ingliz she\'riyatining eng yuksak namunasi. Muhabbat, o\'lim va go\'zallik haqida.'},
+      {title:'Bo\'ron',year:'1611',type:'Drama',desc:'Sehrgar Prospero va uning qizi Miranda haqida sehrli drama. Shekspirnong so\'nggi buyuk asarlaridan biri.'},
+    ]
+  },
+  {
+    id:2, num:'II', name:'Lev Tolstoy', native:'Лев Николаевич Толстой',
+    born:'1828', died:'1910', country:'Rossiya', genre:'Roman, Novella',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c6/L.N.Tolstoy_Prokudin-Gorsky.jpg/300px-L.N.Tolstoy_Prokudin-Gorsky.jpg',
+    bio:[
+      'Lev Nikolayevich Tolstoy (1828–1910) — rus yozuvchisi va falsafachisi. U Yasnaya Polyana mulkida tug\'ilgan. Uning asarlari orasida "Urush va tinchlik" hamda "Anna Karenina" dunyoning eng buyuk romanlari qatorida tilga olinadi.',
+      'Tolstoy yozuvchilik faoliyatini harbiy xizmat davrida boshlagan. U nafaqat romanchilik, balki falsafa, axloq va siyosat sohasida ham ulkan iz qoldirgan. Uning "ahloqiy xristianlik" va "zo\'ravonliksizlik" g\'oyalari Gandi va boshqa buyuk shaxslarga ilhom bergan.',
+      'Hayotining so\'nggi davrida moddiy boylikdan voz kechib, oddiy dehqonona hayot kechirishga uringan. Uning asarlari insonning ma\'naviy qidiruvi va hayotning ma\'nosini izlash haqidagi chuqur falsafiy izlanishlar bilan to\'la.'
+    ],
+    quote:'Baxt — bu o\'zing xohlagan narsa emasligini bilish, balki sen xohlagan narsaga ega bo\'lishdir.',
+    works:[
+      {title:'Urush va Tinchlik',year:'1869',type:'Roman',desc:'Napoleon urushlari davrida Rossiya zodagonlari hayotini tasvirlovchi ulkan epos. Dunyo adabiyotining eng buyuk romanlaridan biri.'},
+      {title:'Anna Karenina',year:'1878',type:'Roman',desc:'Turmush qurilmasiga qarshi chiqqan zodagon ayolning fojiasi. Muhabbat, jamiyat va axloq mavzularidagi buyuk asar.'},
+      {title:'Ivan Ilyichning o\'limi',year:'1886',type:'Novella',desc:'O\'lim oldida hayotining ma\'nosizligini anglab yetgan sudya Ivan Ilyich haqidagi chuqur falsafiy asar.'},
+      {title:'Tirilish',year:'1899',type:'Roman',desc:'O\'z gunohlarini anglagan zodagon va u aldagan ayolning qutqarilish yo\'li haqidagi ijtimoiy roman.'},
+      {title:'Bolalik',year:'1852',type:'Roman',desc:'Yozuvchining o\'z bolalik xotiralariga asoslangan ilk avtobiografik romani. Uning adabiy karerasini boshlagan asar.'},
+      {title:'Hojji Murat',year:'1912',type:'Povest',desc:'Qafqaz urushidagi chechon qo\'mondoni Hojji Murat haqidagi tarixiy povest. Vafotidan keyin nashr etilgan.'},
+    ]
+  },
+  {
+    id:3, num:'III', name:'Fyodor Dostoyevskiy', native:'Фёдор Михайлович Достоевский',
+    born:'1821', died:'1881', country:'Rossiya', genre:'Roman, Falsafiy proза',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Vasily_Perov_-_%D0%9F%D0%BE%D1%80%D1%82%D1%80%D0%B5%D1%82_%D0%A4.%D0%9C.%D0%94%D0%BE%D1%81%D1%82%D0%BE%D0%B5%D0%B2%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_-_Google_Art_Project.jpg/300px-Vasily_Perov_-_%D0%9F%D0%BE%D1%80%D1%82%D1%80%D0%B5%D1%82_%D0%A4.%D0%9C.%D0%94%D0%BE%D1%81%D1%82%D0%BE%D0%B2%D1%81%D0%BA%D0%BE%D0%B3%D0%BE_-_Google_Art_Project.jpg',
+    bio:[
+      'Fyodor Mixaylovich Dostoyevskiy (1821–1881) — rus yozuvchisi, psixolog va faylasuf. U Moskvada tug\'ilgan. Insoniy ruh va axloqning eng chuqur kuzatuvchilaridan biri sifatida tan olinadi.',
+      'Siyosiy faoliyati uchun hibsga olinib, ölüm jazosiga hukm etilgan, lekin oxirgi lahzada Sibirga surgun bilan almashtirilan. Bu dahshatli tajriba uning dunyoqarashini butunlay o\'zgartirdi va keyingi asarlariga chuqur iz qoldirdi.',
+      'Uning asarlari ruhiy azob, din, erkinlik va insonning ma\'naviy tanlovlari mavzularini o\'rganadi. Ekzistensializm va psixoanaliz nazariyalariga uning ta\'siri beqiyos.'
+    ],
+    quote:'Insonni yuksaltiradigan narsa — uning azob chekish qobiliyatidir.',
+    works:[
+      {title:'Jinoyat va jazo',year:'1866',type:'Roman',desc:'Kambag\'al talaba Raskolnikovning qotillik va keyinchalik vijdon azobiga uchrash haqidagi buyuk psixologik roman.'},
+      {title:'Aka-uka Karamazovlar',year:'1880',type:'Roman',desc:'Ota qotilligiga bog\'liq dramatik voqealar orqali din, axloq va erkinlik mavzularini tadqiq etuvchi oxirgi buyuk roman.'},
+      {title:'Ahmoq',year:'1869',type:'Roman',desc:'Softa, samimiy va mehribon shahzoda Mishkinning yovuz jamiyatdagi fojiasi haqidagi buyuk asar.'},
+      {title:'Jinlar',year:'1872',type:'Roman',desc:'Rus jamiyatidagi inqilobiy harakatni va nihilizmni keskin tanqid qiluvchi siyosiy roman.'},
+      {title:'Yerga ko\'milgan xotiralar',year:'1864',type:'Novella',desc:'Jamiyatdan nafratlanuvchi va o\'z ongining tuzoqlarida yashayotgan qahramonning konfessiyasi.'},
+      {title:'Bechora odamlar',year:'1846',type:'Roman',desc:'Yozuvchining ilk mashhur asari. Kambag\'al amaldor va uning yetim qiz bilan yozishmalarini tasvirlovchi roman.'},
+    ]
+  },
+  {
+    id:4, num:'IV', name:'Gabriel Garsiya Markes', native:'Gabriel García Márquez',
+    born:'1927', died:'2014', country:'Kolumbiya', genre:'Sehr realizm, Roman',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0f/Gabriel_Garcia_Marquez.jpg/300px-Gabriel_Garcia_Marquez.jpg',
+    bio:[
+      'Gabriel Garsiya Markes (1927–2014) — kolumbiyalik yozuvchi va jurnalist. 1982-yilda adabiyot bo\'yicha Nobel mukofotini olgan. U "sehr realizm" yo\'nalishining eng ko\'zga ko\'ringan vakili hisoblanadi.',
+      'Uning asarlari Latin Amerikasining tarixiy va ijtimoiy muammolarini sehrli, fantastik elementlar bilan birgalikda tasvirlaydi. "Yuz yillik yolg\'izlik" romani uni jahon adabiyotining eng buyuk yozuvchilari qatoriga kiritdi.',
+      'U Kolumbiyaning Karib sohil mintaqasi — "Karibbe" ning madaniyati va og\'zaki an\'analaridan ilhom oldi. Uning yozuvchilik uslubi ajoyib detallar va hissiy chuqurlik bilan ajralib turadi.'
+    ],
+    quote:'Har bir inson uchta hayot yashaydi: ommaviy hayot, shaxsiy hayot va sir hayot.',
+    works:[
+      {title:'Yuz yillik yolg\'izlik',year:'1967',type:'Roman',desc:'Buendiya oilasining yetti avlod bo\'yi rivojlanishi haqidagi epik sehr realistik roman. Nobel mukofotining asosiy sababi bo\'lgan asar.'},
+      {title:'Vabo davridagi muhabbat',year:'1985',type:'Roman',desc:'Ellik yildan ortiq davom etgan muhabbat haqidagi roman. Sabr, ishtiyoq va o\'lim mavzulari atrofida aylanadigan shoir asar.'},
+      {title:'O\'lim xabarlari manzilga yetib bormaydi',year:'1981',type:'Novella',desc:'Butun qishloq oldidan o\'ldirish niyatini yashirmagan holda borayotgan qotillarni hech kim to\'xtatmaydigan fojiaviy qissa.'},
+      {title:'Patriarxning kuz fasli',year:'1975',type:'Roman',desc:'Yuz yildan ortiq yashagan diktator haqidagi kuchli siyosiy roman. Hokimiyat va yolg\'izlik mavzularini o\'rganadi.'},
+      {title:'Auntie Eliodoraning mo\'jizasi',year:'1962',type:'Hikoya',desc:'Sehr realist uslubdagi qisqa hikoyalar to\'plami. Lotin Amerika hayotini o\'ziga xos nur va soya bilan tasvirlaydi.'},
+    ]
+  },
+  {
+    id:5, num:'V', name:'Frans Kafka', native:'Franz Kafka',
+    born:'1883', died:'1924', country:'Chexiya (Praqa)', genre:'Absurd, Ekzistensializm',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Franz_Kafka%2C_1923.jpg/300px-Franz_Kafka%2C_1923.jpg',
+    bio:[
+      'Frans Kafka (1883–1924) — Praqada tug\'ilgan nemis tilida yozuvchi yahudiy yozuvchi. U zamonaviy adabiyotning eng ta\'sirli yozuvchilaridan biri hisoblanadi va uning nomi "kafkaeskiy" so\'ziga aylanib, muqarrar yovuzlik va hayotning absurdligini ifodalaydi.',
+      'Kafka o\'z asarlarining ko\'pchiligini vafotidan keyin yo\'q qilishni vasiyat qilgan, biroq do\'sti Maks Brod bu vasiyatga amal qilmadi. Shu tufayli "Jarayon" va "Qasr" kabi asarlar saqlanib qoldi.',
+      'Uning asarlari insonning noma\'lum, ulkan va shaxssiz kuchlarga qarshi kurashini, shuningdek o\'z-o\'zini anglashning muammolarini tasvirlaydi. Zamonaviy qo\'rquv va begonalashuv tuyg\'usini ifodalashda tengsiz.'
+    ],
+    quote:'Kitob o\'qimish — bizni muzlatishi kerak bo\'lgan bolta bo\'lishi kerak.',
+    works:[
+      {title:'O\'zgarish (Metamorfoz)',year:'1915',type:'Qissa',desc:'Bir kuni uyg\'onib o\'zini ulkan hasharotga aylangan holda topadigan Gregor Zamzaning fojiasi. Adabiyotning eng mashhur qissasi.'},
+      {title:'Jarayon',year:'1925',type:'Roman',desc:'Noma\'lum ayblov bilan sudlanayotgan Jozef K.ning absurd voqealarga to\'la hayoti. Zamonaviy byurokratiya tanqidi.'},
+      {title:'Qasr',year:'1926',type:'Roman',desc:'Yerni o\'lchashga kelgan K.ning hech qachon yetib bora olmaydigan qasrdagi rasmiylar bilan kurashi haqida tugallanmagan roman.'},
+      {title:'Amerika (Keyingi dunyo)',year:'1927',type:'Roman',desc:'Amerikaningahvoli haqida yozilgan, adashgan yosh Karl Rossmannning sarguzashtlari haqidagi roman.'},
+      {title:'Jazolash muassasasida',year:'1919',type:'Qissa',desc:'Dahshatli jazo mashinasi va imperatorlik aqidasining qurbonlari haqidagi kuchli allegorik qissa.'},
+    ]
+  },
+  {
+    id:6, num:'VI', name:'Virjiniya Vulf', native:'Virginia Woolf',
+    born:'1882', died:'1941', country:'Angliya', genre:'Modernizm, Onam ong',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0b/George_Charles_Beresford_-_Virginia_Woolf_in_1902_-_derivative.jpg/300px-George_Charles_Beresford_-_Virginia_Woolf_in_1902_-_derivative.jpg',
+    bio:[
+      'Virjiniya Vulf (1882–1941) — ingliz yozuvchi va esse muallifi. U modernist adabiyotning eng muhim vakillari biri hisoblanadi. "Onam ong" (stream of consciousness) texnikasidan foydalanishda kashshof bo\'lgan.',
+      'Bloomsbury guruhi a\'zosi bo\'lgan Vulf o\'z davri feminizmi va ijtimoiy masalalariga ham katta e\'tibor qaratgan. Uning "O\'z xonang" esse-romani ayollar va adabiyot haqidagi eng ta\'sirli asarlardan hisoblanadi.',
+      'Ruhiy kasallik bilan umr bo\'yi kurashgan Vulf 1941-yilda 59 yoshida hayotdan o\'tdi. Uning asarlari odam ongining to\'lqinlanuvchi tabiatini va vaqt o\'tishi haqidagi chuqur his-tuyg\'ularni ajoyib uslubda ifodalaydi.'
+    ],
+    quote:'Yozuvchi degan odam yolg\'iz bo\'lishi kerak. Yozuv yolg\'izlikdan paydo bo\'ladi.',
+    works:[
+      {title:'Missis Dollauey',year:'1925',type:'Roman',desc:'Bir kunlik Londonda ikki paralel hayot — jamiyatchi ayol Klarissa va urush veterani Septimus — haqidagi modernist roman.'},
+      {title:'Mayoqqa qarab',year:'1927',type:'Roman',desc:'Ramsay oilasining Shotlandiya orolidagi yoz tatili va onaning vafoti atrofida o\'rayotgan vaqt haqidagi poetik roman.'},
+      {title:'To\'lqinlar',year:'1931',type:'Roman',desc:'Oltita ovoz orqali hayot, o\'lim va do\'stlik mavzularini tadqiq etuvchi Vulfning eng eksperimental va poetik asari.'},
+      {title:'Orlando',year:'1928',type:'Roman',desc:'Elizaveta davridagi Angliyadan 20-asrgacha yashayotgan va jins o\'zgartiradigan qahramonning fantasmagorik hayoti.'},
+      {title:'O\'z xonang',year:'1929',type:'Esse',desc:'Ayollar yozuvchilik uchun pul va o\'z xonasiga ega bo\'lishi kerakligini ta\'kidlaydigan feminist esse-roman.'},
+    ]
+  },
+  {
+    id:7, num:'VII', name:'Gomer', native:'Ὅμηρος / Homēros',
+    born:'mil. av. VIII asr', died:'mil. av. VIII asr', country:'Qadimgi Yunoniston', genre:'Epik she\'r',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Homeros_MFA_Munich_2903.jpg/300px-Homeros_MFA_Munich_2903.jpg',
+    bio:[
+      'Gomer (miloddan avvalgi VIII asr) — qadimgi yunon epik shoiri. "Iliada" va "Odisseya" epik dostonlarining muallifi hisoblansa ham, ba\'zi olimlar bu asarlar bir kishi tomonidan emas, bir necha shoir tomonidan yaratilgan deb hisoblaydi.',
+      'Gomer ko\'r bo\'lgan degan an\'anaviy tasavvur mavjud. Uning asarlari og\'zaki an\'anada asrlar davomida rivojlangan, keyinchalik yozma shaklga keltirilgan. Qadimgi yunon madaniyatida Gomer ta\'lim asosi bo\'lib xizmat qilgan.',
+      'Uning ikkita asari G\'arb adabiyotining poydevori hisoblanadi. Jahon adabiyotidagi qahramonlik, sayohat, urush va qaytish mavzularining ko\'pchiligi Gomer dostonlarida birinchi bor keng yoritilgan.'
+    ],
+    quote:'Birlik kuchdir, ajralganlikda zaiflik bor.',
+    works:[
+      {title:'Iliada',year:'mil. av. VIII asr',type:'Epik doston',desc:'Troya urushining so\'nggi kunlarini — ayniqsa Axilles va Priamning fojiasini — tasvirlovchi 15,693 misradan iborat buyuk epik doston.'},
+      {title:'Odisseya',year:'mil. av. VIII asr',type:'Epik doston',desc:'Troya urushidan so\'ng vataniga qaytishga urinayotgan Odisseyning 10 yillik sarguzashtlarini tasvirlovchi 12,000 misradan iborat doston.'},
+    ]
+  },
+  {
+    id:8, num:'VIII', name:'Dante Aligyeri', native:'Dante Alighieri',
+    born:'1265', died:'1321', country:'Italiya (Florensiya)', genre:'Epik she\'r, Teologiya',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Dante_Alighieri%27s_portrait_by_Giotto.jpg/300px-Dante_Alighieri%27s_portrait_by_Giotto.jpg',
+    bio:[
+      'Dante Aligyeri (1265–1321) — italyan shoiri va yozuvchisi. "Ilohiy komediya" asarining muallifi bo\'lib, u G\'arb adabiyotining eng buyuk asarlaridan biri hisoblanadi va italyan adabiy tilining shakllanishiga ulkan hissa qo\'shgan.',
+      'Florensiyaning siyosiy kurashlarida faol ishtirok etgan Dante keyinchalik vatanidan badarg\'a qilingan. Surgunlikda yozilgan "Ilohiy komediya" uning butun ilmiy va she\'riy dahosini jamlaydi.',
+      'Uning asarlari o\'rta asr sxolastikasi, fors ilohiyoti va yunon falsafasini uyg\'un tarzda birlashtiradi. Aristotel, Avgustin va Foma Akvinskiy ta\'siri uning asarlarida yaqqol ko\'rinadi.'
+    ],
+    quote:'E\'tiborga olmang narsalar haqida fikr-mulohaza yuritma, faqat ko\'r va o\'t.',
+    works:[
+      {title:'Ilohiy Komediya — Do\'zax',year:'1308–1320',type:'Doston',desc:'Dante\'s do\'zaxdan safar — Virgil boshchiligida 9 doiradagi gunohkorlarni ko\'rib chiqadigan birinchi va eng mashhur qism.'},
+      {title:'Ilohiy Komediya — Purgatoria',year:'1308–1320',type:'Doston',desc:'Gunohlaridan tozalanayotgan ruhlar yashaydigan tog\'ning 9 ta qavatini tasvirlovchi ikkinchi qism.'},
+      {title:'Ilohiy Komediya — Jannat',year:'1308–1320',type:'Doston',desc:'Beatricha boshchiligida jannatning 9 osmonini va Xudoni ko\'rish haqidagi uchinchi va oxirgi qism.'},
+      {title:'Yangi Hayot',year:'1295',type:'She\'r-proza',desc:'Dante\'ning Beatrichega bo\'lgan muhabbatini tasvirlaydigan she\'r va nasrdan iborat avtobiografik asar.'},
+      {title:'Davlat to\'g\'risida',year:'1313',type:'Esse',desc:'Monarxiya va imperiyaning ilohiy huquqi haqida yozilgan siyosiy-falsafiy traktat.'},
+    ]
+  },
+  {
+    id:9, num:'IX', name:'Miguel de Servantes', native:'Miguel de Cervantes',
+    born:'1547', died:'1616', country:'Ispaniya', genre:'Roman, Satira',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/09/Cervantes_J%C3%A1uregui.jpg/300px-Cervantes_J%C3%A1uregui.jpg',
+    bio:[
+      'Miguel de Servantes (1547–1616) — ispan yozuvchisi. Uning "Don Kixot" romani ko\'pchilik tomonidan dunyodagi birinchi va eng buyuk zamonaviy roman sifatida tan olinadi. Ushbu asari bilan u ispan adabiyotini jahonga tanita oldi.',
+      'Servantes harbiy xizmat davridagi jangda chap qo\'lini yo\'qotgan. Keyin bir necha yil asirlikda o\'tkazgan. Bu og\'ir hayot tajribalari uning ijodiga chuqur ta\'sir ko\'rsatgan.',
+      'U Shekspir bilan bir kunda — 1616-yil 23-aprelda — vafot etgan. Ikkalasining ölümi ham dunyo adabiyoti uchun ulkan yo\'qotish bo\'ldi. Xalqaro kitob kuni shu sababdan 23-aprelda nishonlanadi.'
+    ],
+    quote:'Erkinlik — insoniyatga Xudo tomonidan berilgan eng qimmatli nemat.',
+    works:[
+      {title:'Don Kixot (1-qism)',year:'1605',type:'Roman',desc:'Ritsarlik kitoblarini o\'qib aqldan ozgan La-Manchalik hidalgo Don Kixot va uning xizmatkorlari Sancho Pansaning sarguzashtlari.'},
+      {title:'Don Kixot (2-qism)',year:'1615',type:'Roman',desc:'Don Kixotning yangi sarguzashtlari va mavhum bilan haqiqatning chegarasini tadqiq etuvchi ikkinchi qism.'},
+      {title:'Namunaviy hikoyalar',year:'1613',type:'Hikoyalar',desc:'O\'n ikki ta novelladan iborat to\'plam. Ispan jamiyatini turli burchaklardan tasvirlovchi rang-barang qissalar.'},
+      {title:'Galatea',year:'1585',type:'Roman',desc:'Cho\'pon muhabbati haqidagi pastoral roman. Servantesning birinchi yirik nashrga chiqarilgan asari.'},
+    ]
+  },
+  {
+    id:10, num:'X', name:'Jeyms Joys', native:'James Joyce',
+    born:'1882', died:'1941', country:'Irlandiya', genre:'Modernizm, Onam ong',
+    img:'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Revolutionary_Joyce_Better_Contrast.jpg/300px-Revolutionary_Joyce_Better_Contrast.jpg',
+    bio:[
+      'Jeyms Joys (1882–1941) — irland yozuvchisi va modernizm harakatining asosiy vakili. Uning "Uliss" romani 20-asrning eng muhim va eng qiyin romanlari qatorida tilga olinadi.',
+      'Dublin shahridan ketgan Joys umrining ko\'p qismini Parijda, Triestda va Syurixda o\'tkazdi. Biroq asarlarida Dublin va irland madaniyati doimo markaziy o\'rinni egalladi. Uning uslubi an\'anaviy roman tuzilishini butunlay o\'zgartirib yubordi.',
+      'Ko\'z kasalligi bilan kuchli kurashgan Joys hayotining oxirida deyarli ko\'r bo\'lgan. "Finnegans Wake" asari o\'n yetti yil mobaynida yozilgan bo\'lib, uni tilshunoslikning eng murakkab asarlaridan biri deb hisoblashadi.'
+    ],
+    quote:'Xato qilish insoniydir, ammo xatoni takrorlash yozuvchi uchun insoniy.'  ,
+    works:[
+      {title:'Uliss',year:'1922',type:'Roman',desc:'Leopold Blum va Stiven Dedaling 1904-yil 16-iyundagi bir kunini 18 epizodda Gomerning Odisseya asari tuzilmasida tasvirlovchi modernizm shoh asari.'},
+      {title:'Dublinliklar',year:'1914',type:'Hikoyalar',desc:'Dublindagi oddiy odamlar hayotini tasvirlovchi o\'n beshta hikoyadan iborat to\'plam. "Paraliz" mavzusi markaziy o\'rinda.'},
+      {title:'San\'atkor yoshligida',year:'1916',type:'Roman',desc:'Yosh Stiven Dedaling ijtimoiy va din zanjirlaridan ozod bo\'lib san\'atkor bo\'lish yo\'lidagi rivojlanishi.'},
+      {title:'Finnegans Wake',year:'1939',type:'Roman',desc:'Tillar, miflar va oneirik (tush) logikasi asosida yozilgan, dunyodagi eng murakkab va ko\'p qatlamli adabiy asarlardan biri.'},
+      {title:'Kammer musiqa',year:'1907',type:'She\'r',desc:'Joysnin ilk nashr etilgan asari — italyan she\'riyati an\'anasida yozilgan lirik she\'rlar to\'plami.'},
+    ]
+  }
+];
+
+let currentPage = 'home';
+let currentAuthorId = null;
+let historyStack = ['home'];
+
+function showPage(pageId, authorId=null, addHistory=true){
+  const old = document.querySelector('.page.active');
+  if(old){
+    old.classList.add('page-exit');
+    setTimeout(()=>old.classList.remove('page-exit'),350);
+    old.classList.remove('active');
+  }
+  if(addHistory && pageId!==currentPage) historyStack.push(pageId+(authorId?':'+authorId:''));
+  currentPage = pageId;
+  currentAuthorId = authorId;
+
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const nb = document.getElementById('nav-'+pageId);
+  if(nb) nb.classList.add('active');
+
+  const p = document.getElementById('page-'+pageId);
+  p.classList.add('active','page-enter');
+  setTimeout(()=>p.classList.remove('page-enter'),600);
+
+  if(pageId==='home') renderHome();
+  if(pageId==='list') renderList();
+  if(pageId==='author') renderAuthor(authorId);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goBack(){
+  historyStack.pop();
+  const prev = historyStack[historyStack.length-1]||'home';
+  const [pg, id] = prev.split(':');
+  showPage(pg, id?parseInt(id):null, false);
+}
+
+function renderHome(){
+  const g = document.getElementById('home-grid');
+  g.innerHTML = AUTHORS.map(a=>`
+    <div class="author-card" onclick="showPage('author',${a.id})">
+      <img class="card-img" src="${a.img}" alt="${a.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="card-img-placeholder" style="display:none">📖</div>
+      <div class="card-body">
+        <div class="card-num">№ ${a.num}</div>
+        <div class="card-name">${a.name}</div>
+        <div class="card-era">${a.country} · ${a.born}–${a.died}</div>
+        <span class="card-genre">${a.genre.split(',')[0]}</span>
+        <div class="card-works-count">${a.works.length} ta asar</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderList(){
+  document.getElementById('list-container').innerHTML = AUTHORS.map(a=>`
+    <div class="author-list-item" onclick="showPage('author',${a.id})">
+      <div class="list-num">${a.num}</div>
+      <img class="list-thumb" src="${a.img}" alt="${a.name}" onerror="this.style.display='none';this.insertAdjacentHTML('afterend','<div class=list-thumb-ph>📖</div>')">
+      <div class="list-info">
+        <div class="list-name">${a.name}</div>
+        <div class="list-era">${a.native} · ${a.born}–${a.died}</div>
+        <div class="list-genre">${a.country} · ${a.genre}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderAuthor(id){
+  const a = AUTHORS.find(x=>x.id==id);
+  if(!a) return;
+  document.getElementById('author-content').innerHTML=`
+    <div class="author-header">
+      <div class="author-photo-wrap">
+        <img class="author-photo" src="${a.img}" alt="${a.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+        <div class="author-photo-placeholder" style="display:none">📖</div>
+      </div>
+      <div class="author-info">
+        <div class="author-number">Yozuvchi № ${a.num}</div>
+        <h1 class="author-name-big">${a.name}</h1>
+        <div class="author-name-native">${a.native}</div>
+        <div class="author-meta">
+          <div class="meta-item"><span class="meta-label">TUG'ILGAN</span><span class="meta-value">${a.born}</span></div>
+          <div class="meta-item"><span class="meta-label">VAFOT</span><span class="meta-value">${a.died}</span></div>
+          <div class="meta-item"><span class="meta-label">DAVLAT</span><span class="meta-value">${a.country}</span></div>
+          <div class="meta-item"><span class="meta-label">JANR</span><span class="meta-value">${a.genre}</span></div>
+        </div>
+        <div class="quote-block">"${a.quote}"</div>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('bio',this)">Biografiya</button>
+      <button class="tab" onclick="switchTab('works',this)">Asarlari (${a.works.length})</button>
+    </div>
+    <div class="tab-content active" id="tab-bio">
+      ${a.bio.map(p=>`<p class="author-bio" style="margin-bottom:1rem">${p}</p>`).join('')}
+    </div>
+    <div class="tab-content" id="tab-works">
+      <ul class="works-list">
+        ${a.works.map((w,i)=>`
+          <li class="work-item">
+            <div class="work-num">${i+1}</div>
+            <div class="work-main">
+              <div class="work-title">${w.title}</div>
+              <div class="work-year">${w.year}</div>
+              <div class="work-desc">${w.desc}</div>
+              <span class="work-badge">${w.type}</span>
+            </div>
+          </li>
+        `).join('')}
+      </ul>
+    </div>
+  `;
+}
+
+function switchTab(name, btn){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+renderHome();
+renderList();
+</script>
