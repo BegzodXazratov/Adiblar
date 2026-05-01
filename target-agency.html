@@ -1,0 +1,2218 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TARGET — Raqamli Marketing Agentligi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #161616;
+    --border: rgba(255,255,255,0.07);
+    --gold: #c9a84c;
+    --gold2: #e8c96a;
+    --white: #f0ede6;
+    --muted: #888;
+    --red: #e05050;
+    --font-head: 'Cormorant Garamond', serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE TEXTURE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+  /* ─── NAVIGATION ─── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 48px;
+    height: 64px;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+
+  .nav-links a:hover,
+  .nav-links a.active { color: var(--white); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 9px 22px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .nav-cta:hover { background: var(--gold2); transform: translateY(-1px); }
+
+  /* ─── PAGE SYSTEM ─── */
+  .page { display: none; padding-top: 64px; min-height: 100vh; }
+  .page.active { display: block; }
+
+  /* ─── HERO ─── */
+  .hero {
+    position: relative;
+    min-height: calc(100vh - 64px);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+    top: -100px;
+    right: -100px;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 48px;
+    width: 100%;
+  }
+
+  .hero-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s forwards;
+  }
+
+  .hero-title {
+    font-family: var(--font-head);
+    font-size: clamp(52px, 8vw, 110px);
+    font-weight: 300;
+    line-height: 0.95;
+    letter-spacing: -2px;
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.2s forwards;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-title strong {
+    display: block;
+    font-weight: 700;
+  }
+
+  .hero-sub {
+    max-width: 520px;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 52px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.35s forwards;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.5s forwards;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    padding: 15px 36px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-primary:hover { background: var(--gold2); transform: translateY(-2px); }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid var(--border);
+    padding: 15px 36px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-stats {
+    position: absolute;
+    right: 48px;
+    bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    opacity: 0;
+    animation: fadeIn 0.8s 0.7s forwards;
+  }
+
+  .stat-item { text-align: right; }
+
+  .stat-num {
+    font-family: var(--font-head);
+    font-size: 42px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .scroll-line {
+    position: absolute;
+    bottom: 40px;
+    left: 48px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+    animation: fadeIn 1s 1s forwards;
+  }
+
+  .scroll-line span {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .scroll-line::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  /* ─── SECTION BASE ─── */
+  section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 100px 48px;
+  }
+
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: var(--font-head);
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  .section-sub {
+    color: var(--muted);
+    max-width: 540px;
+    font-size: 15px;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 48px;
+  }
+
+  /* ─── SERVICES ─── */
+  .services-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 64px;
+    gap: 40px;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .service-card {
+    background: var(--bg);
+    padding: 40px 36px;
+    position: relative;
+    transition: background 0.3s;
+    overflow: hidden;
+  }
+
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+    transform-origin: left;
+  }
+
+  .service-card:hover { background: var(--bg3); }
+  .service-card:hover::before { transform: scaleX(1); }
+
+  .service-icon {
+    font-size: 28px;
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .service-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    margin-bottom: 14px;
+  }
+
+  .service-name {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .service-desc {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+
+  .service-from {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gold);
+  }
+
+  /* ─── PRICING ─── */
+  .pricing-intro {
+    margin-bottom: 60px;
+  }
+
+  .pricing-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pricing-tab {
+    padding: 12px 28px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: none;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    transition: all 0.2s;
+    font-family: var(--font-body);
+  }
+
+  .pricing-tab:hover { color: var(--white); }
+  .pricing-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  .pricing-panel { display: none; }
+  .pricing-panel.active { display: block; }
+
+  /* Packages */
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .package-card {
+    border: 1px solid var(--border);
+    padding: 40px 32px;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+
+  .package-card:hover { border-color: rgba(201,168,76,0.3); }
+  .package-card.featured { border-color: var(--gold); }
+
+  .package-badge {
+    position: absolute;
+    top: -12px;
+    left: 32px;
+    background: var(--gold);
+    color: #000;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+  }
+
+  .package-name {
+    font-family: var(--font-head);
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .package-desc {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 28px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .package-price {
+    margin-bottom: 28px;
+  }
+
+  .package-price .amount {
+    font-family: var(--font-head);
+    font-size: 52px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .package-price .currency {
+    font-size: 20px;
+    font-weight: 400;
+    margin-left: 4px;
+  }
+
+  .package-price .period {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .package-features {
+    list-style: none;
+    margin-bottom: 32px;
+  }
+
+  .package-features li {
+    font-size: 14px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #ccc;
+  }
+
+  .package-features li::before {
+    content: '—';
+    color: var(--gold);
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  /* Custom Builder */
+  .builder-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 40px;
+    align-items: start;
+  }
+
+  .builder-items {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: var(--border);
+  }
+
+  .builder-item {
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    padding: 20px 24px;
+    gap: 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+  }
+
+  .builder-item:hover { background: var(--bg3); }
+
+  .builder-check {
+    width: 22px;
+    height: 22px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-size: 12px;
+    color: transparent;
+  }
+
+  .builder-item.selected .builder-check {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #000;
+  }
+
+  .builder-info { flex: 1; }
+
+  .builder-name {
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+
+  .builder-note {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .builder-price {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--gold);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .builder-summary {
+    border: 1px solid var(--border);
+    padding: 36px 32px;
+    position: sticky;
+    top: 84px;
+  }
+
+  .builder-summary h3 {
+    font-family: var(--font-head);
+    font-size: 22px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .summary-items {
+    min-height: 120px;
+    margin-bottom: 24px;
+  }
+
+  .summary-empty {
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center;
+    padding: 32px 0;
+  }
+
+  .summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    gap: 16px;
+  }
+
+  .summary-item span:last-child {
+    color: var(--gold);
+    font-family: var(--font-mono);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    margin-top: 4px;
+    border-top: 1px solid var(--gold);
+    margin-bottom: 24px;
+  }
+
+  .summary-total span:first-child {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+  }
+
+  .summary-total .total-price {
+    font-family: var(--font-head);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  /* ─── TESTIMONIAL STRIP ─── */
+  .testimonial-strip {
+    background: var(--bg3);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 0;
+    overflow: hidden;
+  }
+
+  .t-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  .t-item {
+    padding: 32px;
+    border-left: 2px solid var(--gold);
+  }
+
+  .t-quote {
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-style: italic;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #ddd;
+  }
+
+  .t-author {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .t-author strong {
+    display: block;
+    color: var(--white);
+    font-size: 14px;
+    letter-spacing: 0;
+    text-transform: none;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+
+  /* ─── ABOUT PAGE ─── */
+  .about-hero {
+    min-height: 40vh;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  .about-hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 48px;
+  }
+
+  .about-tagline {
+    font-family: var(--font-head);
+    font-size: clamp(32px, 5vw, 72px);
+    font-weight: 300;
+    line-height: 1.1;
+    max-width: 800px;
+  }
+
+  .about-tagline em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .about-body {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 48px;
+  }
+
+  .about-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-bottom: 80px;
+    align-items: start;
+  }
+
+  .about-text h2 {
+    font-family: var(--font-head);
+    font-size: 42px;
+    font-weight: 400;
+    margin-bottom: 24px;
+    line-height: 1.1;
+  }
+
+  .about-text p {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 16px;
+  }
+
+  .about-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .metric-box {
+    padding: 28px;
+    border: 1px solid var(--border);
+  }
+
+  .metric-box .num {
+    font-family: var(--font-head);
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .metric-box .label {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  /* Team */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    margin-top: 56px;
+  }
+
+  .team-card {
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .team-card:hover { border-color: rgba(201,168,76,0.3); }
+
+  .team-avatar {
+    height: 200px;
+    background: var(--bg3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .team-avatar::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to top, var(--bg3), transparent);
+  }
+
+  .team-info { padding: 24px; }
+
+  .team-name {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  .team-role {
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+  }
+
+  .team-bio {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ─── FAQ PAGE ─── */
+  .faq-hero {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 48px 48px;
+  }
+
+  .faq-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px 100px;
+  }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .faq-categories {
+    position: sticky;
+    top: 84px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .faq-cat {
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .faq-cat:hover { color: var(--white); }
+  .faq-cat.active { color: var(--gold); border-left-color: var(--gold); }
+
+  .faq-items { display: none; }
+  .faq-items.active { display: block; }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-q {
+    padding: 22px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    gap: 24px;
+  }
+
+  .faq-q span {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  .faq-toggle {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: var(--gold);
+    transition: all 0.2s;
+    font-family: var(--font-mono);
+  }
+
+  .faq-item.open .faq-toggle {
+    background: var(--gold);
+    color: #000;
+    border-color: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .faq-a {
+    display: none;
+    padding: 0 0 22px 0;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+    max-width: 620px;
+  }
+
+  .faq-item.open .faq-a { display: block; }
+
+  /* ─── TERMS PAGE ─── */
+  .terms-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 48px;
+  }
+
+  .terms-nav {
+    display: flex;
+    gap: 0;
+    margin-bottom: 56px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .terms-tab {
+    padding: 12px 24px;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: var(--font-body);
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .terms-tab:hover { color: var(--white); }
+  .terms-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  .terms-panel { display: none; }
+  .terms-panel.active { display: block; }
+
+  .terms-block {
+    margin-bottom: 48px;
+    padding: 36px;
+    border: 1px solid var(--border);
+    position: relative;
+  }
+
+  .terms-block::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--gold);
+  }
+
+  .terms-block h3 {
+    font-family: var(--font-head);
+    font-size: 22px;
+    margin-bottom: 16px;
+    color: var(--white);
+  }
+
+  .terms-block p,
+  .terms-block li {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 8px;
+  }
+
+  .terms-block ul { padding-left: 20px; margin-top: 8px; }
+  .terms-block li { list-style: none; position: relative; padding-left: 16px; }
+  .terms-block li::before { content: '—'; position: absolute; left: 0; color: var(--gold); }
+
+  .terms-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+
+  .metric-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    gap: 24px;
+  }
+
+  .metric-row span:first-child { color: var(--muted); }
+  .metric-row span:last-child { color: var(--white); font-weight: 500; font-family: var(--font-mono); font-size: 12px; }
+
+  /* ─── POPUP ─── */
+  .popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 1000;
+    backdrop-filter: blur(8px);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .popup-overlay.open { display: flex; }
+
+  .popup-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 52px 48px;
+    max-width: 520px;
+    width: 100%;
+    position: relative;
+    animation: popIn 0.3s ease;
+  }
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.96) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .popup-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 20px;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color 0.2s;
+  }
+
+  .popup-close:hover { color: var(--white); }
+
+  .popup-title {
+    font-family: var(--font-head);
+    font-size: 36px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  .popup-sub {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 36px;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-family: var(--font-mono);
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--white);
+    padding: 13px 16px;
+    font-family: var(--font-body);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input:focus,
+  .form-select:focus,
+  .form-textarea:focus { border-color: var(--gold); }
+
+  .form-select option { background: var(--bg3); }
+
+  .form-textarea { resize: vertical; min-height: 90px; }
+
+  .popup-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .tg-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #229ED9;
+    color: #fff;
+    border: none;
+    padding: 14px 24px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .tg-btn:hover { opacity: 0.9; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 48px 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 60px;
+  }
+
+  .footer-brand .logo {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .footer-brand p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 260px;
+  }
+
+  .footer-col h4 {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    font-family: var(--font-mono);
+  }
+
+  .footer-col a,
+  .footer-col p {
+    display: block;
+    color: #777;
+    text-decoration: none;
+    font-size: 13px;
+    margin-bottom: 10px;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+
+  .footer-col a:hover { color: var(--white); }
+
+  .footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 48px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #555;
+  }
+
+  /* ─── TG FLOATING ─── */
+  .tg-float {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 50;
+    background: #229ED9;
+    width: 52px;
+    height: 52px;
+    border-radius: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 8px 32px rgba(34,158,217,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .tg-float:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(34,158,217,0.4);
+  }
+
+  .tg-float svg { width: 24px; height: 24px; fill: white; }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* ─── SUCCESS MSG ─── */
+  .success-msg {
+    display: none;
+    text-align: center;
+    padding: 40px 0;
+  }
+
+  .success-msg .check {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+
+  .success-msg h3 {
+    font-family: var(--font-head);
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .success-msg p { color: var(--muted); font-size: 14px; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 0 24px; }
+    .nav-links { display: none; }
+    section { padding: 60px 24px; }
+    .hero-content { padding: 60px 24px; }
+    .hero-stats { display: none; }
+    .services-grid { grid-template-columns: 1fr 1fr; }
+    .packages-grid { grid-template-columns: 1fr; }
+    .builder-grid { grid-template-columns: 1fr; }
+    .about-cols { grid-template-columns: 1fr; gap: 40px; }
+    .team-grid { grid-template-columns: 1fr 1fr; }
+    .faq-grid { grid-template-columns: 1fr; }
+    .faq-categories { position: static; flex-direction: row; flex-wrap: wrap; }
+    .terms-grid { grid-template-columns: 1fr; }
+    .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+    .t-inner { grid-template-columns: 1fr; }
+    .divider { margin: 0 24px; }
+    .hero-title { letter-spacing: -1px; }
+  }
+
+  @media (max-width: 600px) {
+    .services-grid { grid-template-columns: 1fr; }
+    .team-grid { grid-template-columns: 1fr; }
+    .hero-actions { flex-direction: column; align-items: flex-start; }
+    .popup-box { padding: 36px 24px; }
+    .about-metrics { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">TARGET</div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" id="nav-home" class="active">Asosiy</a></li>
+    <li><a onclick="showPage('about')" id="nav-about">Biz haqimizda</a></li>
+    <li><a onclick="showPage('faq')" id="nav-faq">Savollar</a></li>
+    <li><a onclick="showPage('terms')" id="nav-terms">Shartlar</a></li>
+  </ul>
+  <button class="nav-cta" onclick="openPopup()">Konsultatsiya olish</button>
+</nav>
+
+<!-- ════════════════════════════ HOME PAGE ════════════════════════════ -->
+<div id="page-home" class="page active">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <p class="hero-label">// Toshkent · Raqamli Marketing</p>
+      <h1 class="hero-title">
+        <em>Natija</em> beruvchi<br>
+        <strong>marketing.</strong>
+      </h1>
+      <p class="hero-sub">Biz reklama byudjetingizni savdoga aylantiruvchi target, kontent va strategiya agentligimiz. 3 yillik tajriba, o'lchangan natijalar.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="openPopup()">Bepul konsultatsiya</button>
+        <button class="btn-outline" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Xizmatlarimiz →</button>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">150+</div>
+        <div class="stat-label">Mijozlar</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3x</div>
+        <div class="stat-label">O'rtacha ROAS</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">3+</div>
+        <div class="stat-label">Yillik tajriba</div>
+      </div>
+    </div>
+    <div class="scroll-line"><span>pastga aylantiring</span></div>
+  </div>
+
+  <!-- Services -->
+  <div class="divider"></div>
+  <section id="services">
+    <div class="services-header">
+      <div>
+        <div class="section-label">02 — Xizmatlar</div>
+        <h2 class="section-title">Bizning<br><em style="font-style:italic;color:var(--gold)">ixtisosliklar</em></h2>
+      </div>
+      <p class="section-sub">Har bir xizmat mustaqil yoki kompleks ravishda olinishi mumkin. Narxlar pastda batafsil ko'rsatilgan.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card">
+        <span class="service-icon">🎯</span>
+        <div class="service-num">01</div>
+        <div class="service-name">Ads Manager</div>
+        <div class="service-desc">Facebook, Instagram va TikTok reklamalarini professional sozlash, audit va boshqarish. A/B test, retargeting, lookalike auditoriyalar.</div>
+        <div class="service-from">dan $200 / oy</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">🌐</span>
+        <div class="service-num">02</div>
+        <div class="service-name">Sayt yasash</div>
+        <div class="service-desc">Landing page va to'liq korporativ saytlar. Konversiyaga optimallashtirilgan dizayn, tez yuklanuv, SEO-tayyor struktura.</div>
+        <div class="service-from">dan $350</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">🎬</span>
+        <div class="service-num">03</div>
+        <div class="service-name">Reels Production</div>
+        <div class="service-desc">Professional video kontent: Reels, TikTok, reklama videolari. Skript, shooting, montaj, so'nggi post-prodakshn.</div>
+        <div class="service-from">dan $30 / video</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">📊</span>
+        <div class="service-num">04</div>
+        <div class="service-name">CRM Strategiyasi</div>
+        <div class="service-desc">Mijoz bazasini segmentatsiya qilish, email/SMS voronkalar, avtomatlashtirish va LTV oshirishga yo'naltirilgan strategiya.</div>
+        <div class="service-from">dan $180</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">✍️</span>
+        <div class="service-num">05</div>
+        <div class="service-name">Ssenariy tayyorlash</div>
+        <div class="service-desc">Reklama uchun ssenariylar, copywriting, UGC skriptlar, hooks va CTA yozish. Psixologiyaga asoslangan matnlar.</div>
+        <div class="service-from">dan $25 / ssenariy</div>
+      </div>
+      <div class="service-card">
+        <span class="service-icon">📱</span>
+        <div class="service-num">06</div>
+        <div class="service-name">SMM & Kontent</div>
+        <div class="service-desc">Ijtimoiy tarmoqlarni to'liq boshqarish: post dizayn, caption yozish, storis, jadval tuzish va hisobot.</div>
+        <div class="service-from">dan $150 / oy</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Pricing -->
+  <section id="pricing">
+    <div class="pricing-intro">
+      <div class="section-label">03 — Narxlar</div>
+      <h2 class="section-title">Tayyor paketlar yoki<br><em style="font-style:italic;color:var(--gold)">o'zingiz yig'ing</em></h2>
+      <p class="section-sub">Tayyor paketlardan birini tanlang yoki kerakli xizmatlarni qo'lda yig'ib, real narxni bilib oling.</p>
+    </div>
+
+    <div class="pricing-tabs">
+      <button class="pricing-tab active" onclick="switchPricingTab(this,'packages')">Tayyor paketlar</button>
+      <button class="pricing-tab" onclick="switchPricingTab(this,'builder')">O'zingiz yig'ing</button>
+    </div>
+
+    <div class="pricing-panel active" id="panel-packages">
+      <div class="packages-grid">
+        <div class="package-card">
+          <div class="package-name">Starter</div>
+          <div class="package-desc">Birinchi marta reklama boshlayotganlar uchun</div>
+          <div class="package-price">
+            <div class="amount">$200<span class="currency"></span></div>
+            <div class="period">oyiga</div>
+          </div>
+          <ul class="package-features">
+            <li>Target texnik sozlash (1 kabinet)</li>
+            <li>2 ta kreativ tayyorlash</li>
+            <li>Oylik hisobot</li>
+            <li>Telegram orqali maslahat</li>
+          </ul>
+          <button class="btn-outline" style="width:100%" onclick="openPopup()">Buyurtma berish</button>
+        </div>
+
+        <div class="package-card featured">
+          <div class="package-badge">Mashhur</div>
+          <div class="package-name">Growth</div>
+          <div class="package-desc">Faol o'sish va konversiyani oshirish uchun</div>
+          <div class="package-price">
+            <div class="amount">$450<span class="currency"></span></div>
+            <div class="period">oyiga</div>
+          </div>
+          <ul class="package-features">
+            <li>Target boshqarish (2 platforma)</li>
+            <li>4 ta video kreativ (Reels)</li>
+            <li>Landing page (1 sahifa)</li>
+            <li>CRM voronka sozlash</li>
+            <li>Haftalik hisobot + A/B test</li>
+            <li>Strategik maslahatlar</li>
+          </ul>
+          <button class="btn-primary" style="width:100%" onclick="openPopup()">Buyurtma berish</button>
+        </div>
+
+        <div class="package-card">
+          <div class="package-name">Enterprise</div>
+          <div class="package-desc">To'liq raqamli marketing autsorsing</div>
+          <div class="package-price">
+            <div class="amount">$900<span class="currency"></span></div>
+            <div class="period">oyiga</div>
+          </div>
+          <ul class="package-features">
+            <li>Barcha platformalar (FB, IG, TikTok)</li>
+            <li>8+ video kreativ oyiga</li>
+            <li>To'liq sayt yoki landig</li>
+            <li>CRM strategiya + avtomatlashtirish</li>
+            <li>SMM boshqarish</li>
+            <li>Shaxsiy menejer 24/7</li>
+            <li>Oylik strategik sessiya</li>
+          </ul>
+          <button class="btn-outline" style="width:100%" onclick="openPopup()">Buyurtma berish</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pricing-panel" id="panel-builder">
+      <div class="builder-grid">
+        <div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:24px;">Kerakli xizmatlarni belgilang — narx avtomatik hisoblanadi.</div>
+          <div class="builder-items" id="builderItems"></div>
+        </div>
+        <div class="builder-summary">
+          <h3>Sizning paket</h3>
+          <div class="summary-items" id="summaryItems">
+            <div class="summary-empty">Hali hech narsa tanlanmagan</div>
+          </div>
+          <div class="summary-total">
+            <span>Jami</span>
+            <span class="total-price" id="totalPrice">$0</span>
+          </div>
+          <button class="btn-primary" style="width:100%;margin-bottom:12px" onclick="openPopup()">Buyurtma berish</button>
+          <a href="https://t.me/+998943541210" target="_blank" class="tg-btn" style="width:100%;justify-content:center">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+            Telegramda so'rash
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <div class="testimonial-strip">
+    <div class="t-inner">
+      <div class="t-item">
+        <div class="t-quote">«Target jamoasi bizning ROAS ni 1.8 dan 4.2 ga olib chiqdi. Faqat 2 oyda. Bu raqamlarga o'zimiz ham ishonmovdik.»</div>
+        <div class="t-author"><strong>Jasur Karimov</strong>Online do'kon egasi, Toshkent</div>
+      </div>
+      <div class="t-item">
+        <div class="t-quote">«Reels production xizmati tufayli Instagram sahifamiz oyiga 12,000 ta yangi obunachiini qo'shdi. Kontent chinakam ishladi.»</div>
+        <div class="t-author"><strong>Malika Yusupova</strong>Beauty studio, Samarqand</div>
+      </div>
+      <div class="t-item">
+        <div class="t-quote">«Landing page va CRM voronka birga ishlashi — bu bizning eng yaxshi investitsiyamiz. Hozir avtomatik lead kelmoqda.»</div>
+        <div class="t-author"><strong>Sherzod Nazarov</strong>Fitnes markaz, Toshkent</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA Strip -->
+  <section style="text-align:center;padding:80px 48px;">
+    <div class="section-label" style="justify-content:center">Hoziroq boshlang</div>
+    <h2 class="section-title" style="margin-bottom:20px">Bepul konsultatsiya<br><em style="font-style:italic;color:var(--gold)">oling</em></h2>
+    <p style="color:var(--muted);max-width:480px;margin:0 auto 40px;font-size:15px;">15 daqiqalik qo'ng'iroqda biznesingizni tahlil qilib, aniq reja tuzib beramiz. Hech qanday majburiyatsiz.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-primary" onclick="openPopup()">Konsultatsiya so'rash</button>
+      <a href="https://t.me/+998943541210" target="_blank" class="tg-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+        +998 94 354 12 10
+      </a>
+    </div>
+  </section>
+
+</div><!-- /home -->
+
+
+<!-- ════════════════════════════ ABOUT PAGE ════════════════════════════ -->
+<div id="page-about" class="page">
+  <div class="about-hero">
+    <div class="about-hero-content">
+      <div class="section-label">Biz haqimizda</div>
+      <h1 class="about-tagline">
+        Raqamli marketing<br>
+        <em>natijaga asoslangan</em><br>
+        professional jamoa.
+      </h1>
+    </div>
+  </div>
+  <div class="about-body">
+    <div class="about-cols">
+      <div class="about-text">
+        <h2>Nega TARGET?</h2>
+        <p>2021 yilda tashkil topgan TARGET agentligi O'zbekistonning eng tez o'suvchi raqamli marketing studiyalaridan biriga aylandi. Biz nafaqat reklama sozlaymiz — biz biznesingizning raqamli ekotizimini quramiz.</p>
+        <p>Har bir loyiha individual yondashuv bilan ko'rib chiqiladi. Biz natijaga bog'liq ishlashga ishontiruvchi shartnoma tuzamiz: agar kelishilgan KPI ga erishilmasa, keyingi oy xizmati tekin.</p>
+        <p>Jamoamiz doim yangi algoritmlar, trendlar va vositalarni o'rganadi. Sizning reklama byudjetingiz eng samarali kanalga yo'naltiriladi.</p>
+      </div>
+      <div class="about-metrics">
+        <div class="metric-box">
+          <div class="num">3+</div>
+          <div class="label">Yil bozorda</div>
+        </div>
+        <div class="metric-box">
+          <div class="num">150+</div>
+          <div class="label">Muvaffaqiyatli loyiha</div>
+        </div>
+        <div class="metric-box">
+          <div class="num">3.8x</div>
+          <div class="label">O'rtacha ROAS</div>
+        </div>
+        <div class="metric-box">
+          <div class="num">94%</div>
+          <div class="label">Mijoz ushlab qolish</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="divider" style="margin:0 0 60px"></div>
+
+    <div class="section-label">Jamoa</div>
+    <h2 class="section-title" style="margin-bottom:0">Mutaxassislar bilan<br><em style="font-style:italic;color:var(--gold)">tanishing</em></h2>
+
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">🧠</div>
+        <div class="team-info">
+          <div class="team-name">Begzod</div>
+          <div class="team-role">Marketing & Copywriting</div>
+          <div class="team-bio">Target mutaxassisi va kontent strategi. Facebook Blueprint sertifikatlangan. 3 yil davomida 80+ loyihada targetolog sifatida ishlagan. Copywriting va psixologik triggers bo'yicha ixtisoslashgan.</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">🎥</div>
+        <div class="team-info">
+          <div class="team-name">Abbos</div>
+          <div class="team-role">Videograf</div>
+          <div class="team-bio">Professional videograf. Reklama videolari, product shoot va brand kontent ishlab chiqarishda 4 yillik tajriba. Sony & DJI uskunalari bilan ishlaydi.</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">📷</div>
+        <div class="team-info">
+          <div class="team-name">Og'abek</div>
+          <div class="team-role">Operator</div>
+          <div class="team-bio">Kamera operator va foto mutaxassis. Ugshot, Reels va stories uchun kontent yaratishda ixtisoslashgan. Rang gradatsiyasi va kompozitsiya bo'yicha kuchli ko'z.</div>
+        </div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">✨</div>
+        <div class="team-info">
+          <div class="team-name">Davron</div>
+          <div class="team-role">Kontent Menejeri</div>
+          <div class="team-bio">SMM strategist va kontent planner. Ijtimoiy tarmoqlar uchun kontent kalendarini boshqaradi. Trenddagi formatlar va auditoriya psixologiyasini tahlil qiladi.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /about -->
+
+
+<!-- ════════════════════════════ FAQ PAGE ════════════════════════════ -->
+<div id="page-faq" class="page">
+  <div class="faq-hero">
+    <div class="section-label">Ko'p beriladigan savollar</div>
+    <h1 class="section-title" style="margin-bottom:8px">Sizda savol bormi?<br><em style="font-style:italic;color:var(--gold)">Javoblar shu yerda.</em></h1>
+    <p class="section-sub" style="margin-top:16px">Eng ko'p beriladigan savollarga to'liq javoblar. Topmasangiz — telegramda so'rang.</p>
+  </div>
+  <div class="faq-content">
+    <div class="faq-grid">
+      <div class="faq-categories">
+        <div class="faq-cat active" onclick="switchFaqCat(this,'general')">Umumiy savollar</div>
+        <div class="faq-cat" onclick="switchFaqCat(this,'target')">Target & Reklama</div>
+        <div class="faq-cat" onclick="switchFaqCat(this,'content')">Kontent & Video</div>
+        <div class="faq-cat" onclick="switchFaqCat(this,'payment')">To'lov & Shartlar</div>
+      </div>
+
+      <div>
+        <!-- General -->
+        <div class="faq-items active" id="faq-general">
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Qancha vaqtdan keyin natija ko'ramiz?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Target reklamada dastlabki natijalar 3-7 kun ichida ko'rinadi. To'liq optimallashtirish uchun 2-4 hafta kerak bo'ladi. Kontent va SMM bo'yicha organik o'sish odatda 1-3 oyda seziladi. Biz har doim real muddatlar va maqsadlar haqida oldindan kelishib olamiz.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Minimal byudjet qancha?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Reklama byudjeti (Facebook/Instagram uchun) kamida $150-200/oy bo'lishi tavsiya etiladi. Bizning xizmat haqi bu raqamga kirmaydi. TikTok uchun minimal $100 yetarli. Kichik byudjet bilan ham boshlash mumkin, lekin natijalar proporsional bo'ladi.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Qaysi soha bizneslar uchun ishlaysizlar?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Biz retail (online do'konlar), beauty & fitness, ta'lim markazlari, restoranlar, ko'chmas mulk, xizmat ko'rsatish sohalari bilan keng tajribaga egamiz. Faqat qimorbozlik, alkogol va taqiqlangan mahsulotlar bilan ishlamaymiz.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Kontrakt tuzilsinmi?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Ha, har bir hamkorlik uchun rasmiy shartnoma tuzamiz. Unda xizmat hajmi, muddatlar, narxlar, KPI maqsadlar va to'lov shartlari aniq ko'rsatiladi. Bu ikki tomonni ham himoya qiladi.</div>
+          </div>
+        </div>
+
+        <!-- Target -->
+        <div class="faq-items" id="faq-target">
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Ads Manager xizmati nima kiradi?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Reklama kabineti sozlash, piksel o'rnatish, auditoriyalar yaratish (custom, lookalike, retargeting), kampaniyalar tuzish, A/B testlar o'tkazish, konversiya optimizatsiyasi, kunlik monitoring va oylik batafsil hisobot kiradi.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Reklama akkauntim ban bo'lsa nima qilasizlar?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Biz ban holatlarini oldindan oldini oladigan strategiyalar ishlatamiz (Business Manager to'g'ri sozlash, warm-up, policy compliance). Agar ban bo'lsa, appeal jarayonini olib boramiz. Doimiy ban bo'lsa, yangi kabinet sozlash bo'yicha yordam beramiz.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Reklama kabinetiga kirish huquqini berish kerakmi?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Ha, ishlash uchun Business Manager yoki Ad Account ga admin yoki advertiser access kerak. Parol yoki shaxsiy ma'lumot so'rmaymiz — faqat rasmiy Facebook/Meta tizimi orqali ruxsat berasiz. Bu xavfsiz va qaytarib olinadigan usul.</div>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="faq-items" id="faq-content">
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Shooting qayerda o'tadi?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Sizning lokatsiyangizda (do'kon, ofis, studio) yoki biz tavsiya etuvchi lokatsiyalarda. Toshkent bo'ylab chiqib ishlashimiz mumkin. Tashqariga chiqish uchun qo'shimcha transport narxi kelishiladi.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Bitta video qancha vaqt oladi?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Oddiy Reels uchun shooting + montaj 2-3 ish kuni. Murakkab reklama videosi (skript, aktyor, grafika) uchun 5-7 kun. Shoshilinch buyurtmalar uchun 24-48 soatlik express ish (+50% narx) mavjud.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Tasdiqlashlar qanday ishlaydi?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Ssenariy tasdiqlash → Shooting → Xom versiya ko'rsatish → 1 ta bepul tuzatish → Final versiya topshirish. Agar fundamental o'zgarish so'ralsа (masalan, konsepsiya to'liq o'zgartirilsa), bu alohida kelishiladi.</div>
+          </div>
+        </div>
+
+        <!-- Payment -->
+        <div class="faq-items" id="faq-payment">
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Qanday to'lov qilaman?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Click, Payme, bank o'tkazmasi (UZS va USD) qabul qilamiz. Oylik xizmatlar uchun oyning 1-5 kunida to'lov amalga oshiriladi. Yirik loyihalar uchun bosqichma-bosqich to'lov (50% oldindan, 50% topshirishda) mavjud.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Agar natija bo'lmasa qaytarib berasizlarmi?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Kelishilgan KPI ga erishilmasa, keyingi oy xizmati tekiniga beriladi. Pul qaytarish faqat birinchi oy ichida, agar biz umuman kira olmagan va teknik sabab bo'lgan holatlarda ko'rib chiqiladi. Har holat individual ko'rib chiqiladi.</div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-q" onclick="toggleFaq(this)">
+              <span>Shartnomani qachon bekor qilish mumkin?</span>
+              <div class="faq-toggle">+</div>
+            </div>
+            <div class="faq-a">Oylik xizmatlar uchun 15 kun oldindan ogohlantirish bilan bekor qilinadi. Minimal 1 oy ishlash majburiy (set-up xarajatlarini qoplash uchun). Loyiha asosidagi xizmatlar (sayt, video) – topshirishdan keyin to'liq to'lov amalga oshiriladi.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /faq -->
+
+
+<!-- ════════════════════════════ TERMS PAGE ════════════════════════════ -->
+<div id="page-terms" class="page">
+  <div class="terms-content">
+    <div class="section-label">Shartlar & Kelishuv</div>
+    <h1 class="section-title" style="margin-bottom:8px">Har bir xizmat uchun<br><em style="font-style:italic;color:var(--gold)">batafsil shartlar</em></h1>
+    <p class="section-sub" style="margin:16px 0 48px">Hamkorlik boshlanishidan oldin barcha shartlar bilan tanishishni tavsiya etamiz. Savollar bo'lsa — bog'laning.</p>
+
+    <div class="terms-nav">
+      <button class="terms-tab active" onclick="switchTermsTab(this,'ads')">Ads Manager</button>
+      <button class="terms-tab" onclick="switchTermsTab(this,'web')">Sayt yasash</button>
+      <button class="terms-tab" onclick="switchTermsTab(this,'video')">Video Production</button>
+      <button class="terms-tab" onclick="switchTermsTab(this,'crm')">CRM Strategiya</button>
+      <button class="terms-tab" onclick="switchTermsTab(this,'smm')">SMM</button>
+      <button class="terms-tab" onclick="switchTermsTab(this,'general-terms')">Umumiy</button>
+    </div>
+
+    <!-- ADS -->
+    <div class="terms-panel active" id="terms-ads">
+      <div class="terms-block">
+        <h3>Xizmat hajmi</h3>
+        <p>Ads Manager xizmati quyidagilarni o'z ichiga oladi:</p>
+        <ul>
+          <li>Reklama kabineti sozlash va Meta piksel o'rnatish</li>
+          <li>Maqsadli auditoriya yaratish (custom, lookalike, retargeting)</li>
+          <li>Kamida 2 ta kampaniya tuzish va optimallashtirish</li>
+          <li>Haftalik A/B testlar va kreativlarni almashtirish</li>
+          <li>Kunlik monitoring va anomaliyalarni tuzatish</li>
+        </ul>
+      </div>
+      <div class="terms-grid">
+        <div class="terms-block">
+          <h3>Mijoz majburiyatlari</h3>
+          <ul>
+            <li>Ad Account yoki BM ga advertiser huquqini berish</li>
+            <li>Reklama byudjetini vaqtida to'ldirish</li>
+            <li>Kreativlarni 48 soat ichida tasdiqlash</li>
+            <li>Mahsulot/xizmat haqida to'liq ma'lumot berish</li>
+          </ul>
+        </div>
+        <div class="terms-block">
+          <h3>Hisobot va KPI</h3>
+          <ul>
+            <li>Haftalik qisqa hisobot (Telegram)</li>
+            <li>Oylik batafsil hisobot (PDF yoki Google Sheets)</li>
+            <li>Kelishilgan KPI: ROAS, CPL, CPC, CTR</li>
+            <li>KPI bajarilmasa — keyingi oy xizmati tekin</li>
+          </ul>
+        </div>
+      </div>
+      <div class="terms-block">
+        <h3>Narxlar va to'lov</h3>
+        <div class="metric-row"><span>Texnik sozlash (bir martalik)</span><span>$100</span></div>
+        <div class="metric-row"><span>Faqat target texnik ish (oyiga)</span><span>$200</span></div>
+        <div class="metric-row"><span>Target + kreativ (oyiga)</span><span>$300</span></div>
+        <div class="metric-row"><span>Full boshqarish (oyiga)</span><span>$400-500</span></div>
+        <div class="metric-row"><span>To'lov muddati</span><span>Har oy 1-5 kun</span></div>
+        <div class="metric-row"><span>Minimal hamkorlik</span><span>1 oy</span></div>
+      </div>
+    </div>
+
+    <!-- WEB -->
+    <div class="terms-panel" id="terms-web">
+      <div class="terms-block">
+        <h3>Xizmat turlari va narxlar</h3>
+        <div class="metric-row"><span>Landing page (1 sahifa)</span><span>dan $350</span></div>
+        <div class="metric-row"><span>Multi-page sayt (5-7 sahifa)</span><span>dan $700</span></div>
+        <div class="metric-row"><span>Online do'kon (Shopify/WooCommerce)</span><span>dan $900</span></div>
+        <div class="metric-row"><span>Korporativ sayt</span><span>dan $600</span></div>
+        <div class="metric-row"><span>Saytga qo'shimcha sahifa</span><span>$80/sahifa</span></div>
+        <div class="metric-row"><span>Oylik texnik xizmat</span><span>$50/oy</span></div>
+      </div>
+      <div class="terms-grid">
+        <div class="terms-block">
+          <h3>Ishlab chiqish jarayoni</h3>
+          <ul>
+            <li>Brifing va texnik topshiriq: 1-2 kun</li>
+            <li>Dizayn mockup taqdimoti: 3-5 kun</li>
+            <li>Dasturlash: 5-14 kun (hajmiga qarab)</li>
+            <li>Test va tuzatishlar: 2-3 kun</li>
+            <li>Deploy va topshirish: 1 kun</li>
+          </ul>
+        </div>
+        <div class="terms-block">
+          <h3>Nima kiradi</h3>
+          <ul>
+            <li>Responsiv (mobil va desktop) dizayn</li>
+            <li>SEO bazaviy sozlash (meta, sitemap)</li>
+            <li>SSL, hosting sozlash bo'yicha ko'mak</li>
+            <li>30 kunlik bepul texnik qo'llab-quvvatlash</li>
+            <li>Tahrirlash paneli (CMS) o'rgatiladi</li>
+          </ul>
+        </div>
+      </div>
+      <div class="terms-block">
+        <h3>To'lov shartlari</h3>
+        <p>50% ishdan oldin (avans), 50% tayyor sayt topshirilganda. Saytga domenni avval ro'yxatdan o'tkarish mijoz zimmasida. Hosting xarajatlari alohida (yiliga ~$30-80).</p>
+      </div>
+    </div>
+
+    <!-- VIDEO -->
+    <div class="terms-panel" id="terms-video">
+      <div class="terms-block">
+        <h3>Narxlar jadvali</h3>
+        <div class="metric-row"><span>1 ta Reels/TikTok (shooting + montaj)</span><span>$30</span></div>
+        <div class="metric-row"><span>Reklama videosi (30 sek, to'liq prodakshn)</span><span>dan $80</span></div>
+        <div class="metric-row"><span>Product showcase video</span><span>dan $60</span></div>
+        <div class="metric-row"><span>5 ta Reels paketi</span><span>$120 (−20%)</span></div>
+        <div class="metric-row"><span>10 ta Reels paketi</span><span>$220 (−27%)</span></div>
+        <div class="metric-row"><span>Express (24-48 soat)</span><span>+50%</span></div>
+      </div>
+      <div class="terms-grid">
+        <div class="terms-block">
+          <h3>Jarayon</h3>
+          <ul>
+            <li>Brifing: maqsad, auditoriya, ohang</li>
+            <li>Ssenariy tayyorlash va tasdiqlash</li>
+            <li>Shooting (1-3 soat)</li>
+            <li>Montaj (rang gradatsiyasi, ovoz, subtitles)</li>
+            <li>Topshirish — 1 ta bepul tuzatish</li>
+          </ul>
+        </div>
+        <div class="terms-block">
+          <h3>Nimalar kiradi</h3>
+          <ul>
+            <li>Professional shooting (Sony kamera)</li>
+            <li>Stabilizator va yoritish uskunalari</li>
+            <li>Ovoz fonogrammasi yoki muzika (litsenziyalangan)</li>
+            <li>Rangli gradatsiya (color grade)</li>
+            <li>Subtitles (so'rovga ko'ra)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- CRM -->
+    <div class="terms-panel" id="terms-crm">
+      <div class="terms-block">
+        <h3>Xizmat bosqichlari</h3>
+        <ul>
+          <li><strong>Audit:</strong> Joriy mijoz bazasi va sotish voronkasini tahlil qilish — $60 (keyin xizmatga hisoblanadi)</li>
+          <li><strong>Strategiya:</strong> Segmentatsiya, voronka sxemasi, avtomatlashtirish xaritasi tayyorlash — $120</li>
+          <li><strong>Amalga oshirish:</strong> CRM tizimini sozlash, trigger xabarlarni yozish, test — $180+</li>
+          <li><strong>Oylik qo'llab-quvvatlash:</strong> A/B test, hisobot, optimizatsiya — $80/oy</li>
+        </ul>
+      </div>
+      <div class="terms-block">
+        <h3>Qo'llanadigan platformalar</h3>
+        <ul>
+          <li>Telegram Bot (SendPulse, Senler)</li>
+          <li>Email marketing (Mailchimp, UniSender)</li>
+          <li>SMS xabarlari (local provayderlar)</li>
+          <li>WhatsApp Business API</li>
+          <li>AmoCRM, Bitrix24 integratsiya</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SMM -->
+    <div class="terms-panel" id="terms-smm">
+      <div class="terms-block">
+        <h3>SMM Paketlari</h3>
+        <div class="metric-row"><span>Basic (12 post/oy, 8 stories/oy)</span><span>$150/oy</span></div>
+        <div class="metric-row"><span>Standard (20 post, 16 stories, 4 Reels)</span><span>$280/oy</span></div>
+        <div class="metric-row"><span>Premium (30 post, 30 stories, 8 Reels)</span><span>$450/oy</span></div>
+        <div class="metric-row"><span>Kontent kalendari boshqarish</span><span>kiradi</span></div>
+        <div class="metric-row"><span>Community management (kommentariylar)</span><span>+$60/oy</span></div>
+      </div>
+      <div class="terms-block">
+        <h3>Nima kiradi (standart)</h3>
+        <ul>
+          <li>Brendga mos vizual stil va rang palitrasini tuzish</li>
+          <li>Oylik kontent-plan (mavzular, formatllar)</li>
+          <li>Post dizayn (Canva Pro yoki Figma)</li>
+          <li>Caption yozish (hashtag tadqiqot bilan)</li>
+          <li>Belgilangan vaqtda avtomatik post qo'yish</li>
+          <li>Oylik analytics hisobot</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- GENERAL -->
+    <div class="terms-panel" id="terms-general-terms">
+      <div class="terms-grid">
+        <div class="terms-block">
+          <h3>Maxfiylik va ma'lumotlar</h3>
+          <p>Siz bilan bo'lishilgan barcha biznes ma'lumotlar, kreativlar va strategiyalar maxfiy hisoblanadi. Ruxsatsiz uchinchi shaxslarga berilmaydi. NDA talab qilinsa, imzolanadi.</p>
+        </div>
+        <div class="terms-block">
+          <h3>Intellektual mulk</h3>
+          <p>To'liq to'lov amalga oshirilgandan so'ng, barcha yaratilgan materiallar (sayt, videolar, dizaynlar) mijozga to'liq o'tadi. Biz faqat portfolio uchun namoyish qilish huquqini saqlab qolamiz (roziliksiz emas).</p>
+        </div>
+        <div class="terms-block">
+          <h3>Nizolarni hal qilish</h3>
+          <p>Birinchi navbatda muzokaralar yo'li bilan hal qilinadi. Kelishuv bo'lmasa — O'zbekiston Respublikasi qonunchiligi asosida. Sudgacha arbitraj tavsiya etiladi.</p>
+        </div>
+        <div class="terms-block">
+          <h3>Kuch majori</h3>
+          <p>Tabiiy ofatlar, internet uzilishi, platforma siyosati o'zgarishi kabi boshqarib bo'lmaydigan holatlarda shartnoma muddati uzaytiriladi. Pul qaytarilmaydi, lekin xizmat muddati uzaytiriladi.</p>
+        </div>
+      </div>
+      <div class="terms-block">
+        <h3>Umumiy kelishuv qoidalari</h3>
+        <ul>
+          <li>Barcha muloqot Telegram orqali yozma shaklda olib boriladi</li>
+          <li>Javob vaqti: ish kunlari 9:00–19:00 ichida 2 soatgacha</li>
+          <li>Favqulodda holatlar uchun 24/7 aloqa mavjud (Enterprise mijozlar)</li>
+          <li>Har oyda kamida 1 ta strategik muhokama (Zoom/Telegram call)</li>
+          <li>Xizmat o'zgartirilsa, kamida 7 kun oldin xabar beriladi</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:48px;display:flex;gap:16px;flex-wrap:wrap">
+      <button class="btn-primary" onclick="openPopup()">Hamkorlikni boshlash</button>
+      <a href="https://t.me/+998943541210" target="_blank" class="tg-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+        Telegram orqali bog'lanish
+      </a>
+    </div>
+  </div>
+</div><!-- /terms -->
+
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">TARGET</div>
+      <p>Natijaga yo'naltirilgan raqamli marketing. Target, kontent va strategiya bo'yicha ixtisoslashgan jamoa.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigatsiya</h4>
+      <a onclick="showPage('home')">Asosiy sahifa</a>
+      <a onclick="showPage('about')">Biz haqimizda</a>
+      <a onclick="showPage('faq')">Ko'p savollar</a>
+      <a onclick="showPage('terms')">Shartlar</a>
+    </div>
+    <div class="footer-col">
+      <h4>Aloqa</h4>
+      <a href="https://t.me/+998943541210" target="_blank">Telegram: +998 94 354 12 10</a>
+      <p>Toshkent, O'zbekiston</p>
+      <p>Ish vaqti: 9:00 — 19:00</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 TARGET Agency. Barcha huquqlar himoyalangan.</span>
+    <span style="color:var(--gold)">Made in Tashkent 🇺🇿</span>
+  </div>
+</footer>
+
+<!-- ─── POPUP ─── -->
+<div class="popup-overlay" id="popup" onclick="closePopupOutside(event)">
+  <div class="popup-box">
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div id="formContent">
+      <h2 class="popup-title">Bog'laning</h2>
+      <p class="popup-sub">Formni to'ldiring — 30 daqiqa ichida javob beramiz.</p>
+
+      <div class="form-group">
+        <label class="form-label">Ismingiz</label>
+        <input type="text" class="form-input" placeholder="Ismingizni kiriting" id="fname">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Telefon / Telegram</label>
+        <input type="text" class="form-input" placeholder="+998 90 000 00 00" id="fphone">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Qiziquvchi xizmat</label>
+        <select class="form-select" id="fservice">
+          <option value="">Tanlang...</option>
+          <option>Ads Manager</option>
+          <option>Sayt yasash</option>
+          <option>Reels Production</option>
+          <option>CRM Strategiyasi</option>
+          <option>Ssenariy tayyorlash</option>
+          <option>SMM & Kontent</option>
+          <option>Tayyor paket (Starter/Growth/Enterprise)</option>
+          <option>O'zim yig'gan paket</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Qo'shimcha (ixtiyoriy)</label>
+        <textarea class="form-textarea" id="fnote" placeholder="Biznesingiz, maqsadingiz yoki savolingiz..."></textarea>
+      </div>
+      <div class="popup-actions">
+        <button class="btn-primary" style="flex:1" onclick="submitForm()">Yuborish</button>
+        <a href="https://t.me/+998943541210" target="_blank" class="tg-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+          Telegram
+        </a>
+      </div>
+    </div>
+    <div class="success-msg" id="successMsg">
+      <div class="check">✅</div>
+      <h3>So'rovingiz qabul qilindi!</h3>
+      <p>Tez orada Telegram orqali javob beramiz.<br>Yoki o'zingiz yozing: <a href="https://t.me/+998943541210" target="_blank" style="color:var(--gold)">+998 94 354 12 10</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ─── TG FLOAT ─── -->
+<a href="https://t.me/+998943541210" target="_blank" class="tg-float" title="Telegram orqali bog'laning">
+  <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/></svg>
+</a>
+
+<script>
+// ─── BUILDER DATA ───
+const builderData = [
+  { id:1, name:'Target texnik sozlash (1 kabinet)', note:'Facebook / Instagram', price:200 },
+  { id:2, name:'Target boshqarish (2 platforma)', note:'FB + TikTok, oyiga', price:350 },
+  { id:3, name:'Landing page', note:'1 sahifa, full prodakshn', price:350 },
+  { id:4, name:'Multi-page sayt', note:'5+ sahifa', price:700 },
+  { id:5, name:'Bitta Reels video', note:'Shooting + montaj', price:30 },
+  { id:6, name:'5 ta Reels paketi', note:'Shooting + montaj (20% chegirma)', price:120 },
+  { id:7, name:'Reklama videosi (30 sek)', note:'Skript, shooting, montaj', price:80 },
+  { id:8, name:'CRM strategiya audit', note:'Bir martalik', price:60 },
+  { id:9, name:'CRM strategiya + sozlash', note:'To'liq amalga oshirish', price:300 },
+  { id:10, name:'1 ta ssenariy', note:'Reklama uchun', price:25 },
+  { id:11, name:'5 ta ssenariy paketi', note:'(10% chegirma)', price:110 },
+  { id:12, name:'SMM Basic', note:'12 post + 8 stories/oy', price:150 },
+  { id:13, name:'SMM Standard', note:'20 post + Reels/oy', price:280 },
+];
+
+let selected = new Set();
+
+function initBuilder() {
+  const container = document.getElementById('builderItems');
+  container.innerHTML = builderData.map(item => `
+    <div class="builder-item" data-id="${item.id}" onclick="toggleBuilder(${item.id})">
+      <div class="builder-check">✓</div>
+      <div class="builder-info">
+        <div class="builder-name">${item.name}</div>
+        <div class="builder-note">${item.note}</div>
+      </div>
+      <div class="builder-price">$${item.price}</div>
+    </div>
+  `).join('');
+}
+
+function toggleBuilder(id) {
+  if (selected.has(id)) selected.delete(id);
+  else selected.add(id);
+  document.querySelector(`.builder-item[data-id="${id}"]`).classList.toggle('selected');
+  updateSummary();
+}
+
+function updateSummary() {
+  const sItems = document.getElementById('summaryItems');
+  const tPrice = document.getElementById('totalPrice');
+  if (selected.size === 0) {
+    sItems.innerHTML = '<div class="summary-empty">Hali hech narsa tanlanmagan</div>';
+    tPrice.textContent = '$0';
+    return;
+  }
+  let total = 0;
+  let html = '';
+  selected.forEach(id => {
+    const item = builderData.find(d => d.id === id);
+    total += item.price;
+    html += `<div class="summary-item"><span>${item.name}</span><span>$${item.price}</span></div>`;
+  });
+  sItems.innerHTML = html;
+  tPrice.textContent = '$' + total;
+}
+
+// ─── PAGE NAV ───
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + id);
+  if (navEl) navEl.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ─── PRICING TABS ───
+function switchPricingTab(el, panelId) {
+  document.querySelectorAll('.pricing-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pricing-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('panel-' + panelId).classList.add('active');
+}
+
+// ─── FAQ ───
+function switchFaqCat(el, catId) {
+  document.querySelectorAll('.faq-cat').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.faq-items').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('faq-' + catId).classList.add('active');
+}
+
+function toggleFaq(el) {
+  const item = el.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ─── TERMS TABS ───
+function switchTermsTab(el, panelId) {
+  document.querySelectorAll('.terms-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.terms-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('terms-' + panelId).classList.add('active');
+}
+
+// ─── POPUP ───
+function openPopup() {
+  document.getElementById('popup').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePopup() {
+  document.getElementById('popup').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closePopupOutside(e) {
+  if (e.target === document.getElementById('popup')) closePopup();
+}
+
+function submitForm() {
+  const name = document.getElementById('fname').value.trim();
+  const phone = document.getElementById('fphone').value.trim();
+  if (!name || !phone) {
+    alert('Iltimos, ism va telefon raqamingizni kiriting.');
+    return;
+  }
+  document.getElementById('formContent').style.display = 'none';
+  document.getElementById('successMsg').style.display = 'block';
+}
+
+// ─── INIT ───
+initBuilder();
+</script>
+</body>
+</html>
